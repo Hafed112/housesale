@@ -1,15 +1,26 @@
-
+import { BrowserRouter  as Router, Routes, Route} from 'react-router-dom';
+import Home from './pages/Home';
+import Profile from './pages/Profile';
+import SignIn from './pages/SignIn';
+import ForgetPassword from './pages/ForgetPassword';
+import SignUp from './pages/SignUp';
+import Offers from './pages/Offers';
 import './App.css'
 
 function App() {
 
   return (
     <>
-      <div className='container'>
-         <h1 className="text-3xl bg-red-400">
-           Hello world!
-         </h1>
-      </div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />}/>
+          <Route path="/profile" element={<Profile />}/>
+          <Route path="/sign-in" element={<SignIn />}/>
+          <Route path="/sign-up" element={<SignUp />}/>
+          <Route path="/forget-password" element={<ForgetPassword />}/>
+          <Route path="/Offers" element={<Offers />}/>
+        </Routes>
+      </Router>
     </>
   )
 }
