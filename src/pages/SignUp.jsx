@@ -2,6 +2,12 @@ import { useState } from "react"
 import { AiFillEyeInvisible,AiFillEye} from "react-icons/ai";
 import {Link} from "react-router-dom"
 import OAuth from "../components/OAuth";
+import { getAuth,createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {db} from "../firebase";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 export default function SignUp() {
   const [showPassword,setShowPassword] = useState(false);
 
@@ -18,6 +24,29 @@ export default function SignUp() {
   }
 
   const {name,email,password} = formData;
+  const navigate = useNavigate();
+
+  const onSubmit = async(e)=>{
+    e.preventDefault();
+    try {
+        const auth = getAuth();
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        updateProfile(auth.currentUser,{
+          displayName:name
+        })
+        const user = userCredential.user;
+        const formDataCopy = {...formData};
+        delete formDataCopy.password;
+        formDataCopy.timestamp = serverTimestamp();
+        await setDoc(doc(db,"users",user.uid),formDataCopy)
+        toast.success("Sign up was successfully")
+        navigate("/")
+      } catch (error) {
+        toast.error("Somthing went wrong with the registration ")
+      }
+
+  }
   return (
     <section>
       <h1 className="text-3xl text-center mt-12 font-bold">Sign Up</h1>
@@ -29,9 +58,9 @@ export default function SignUp() {
           className="w-full rounded-2xl" />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmit}>
             <div>
-              <input type="text" id="email" 
+              <input type="text" id="name" 
                   value={name} 
                   onChange={change}
                   placeholder="Full name"
@@ -69,12 +98,12 @@ export default function SignUp() {
             </div>
             <div className="flex justify-between 
             whitespace-nowrap text-sm sm:text-lg">
-              <p className="mb-6 ">Don't have a account?
+              <p className="mb-6 ">Have an account?
                 <Link className="text-red-600
                  hover:text-red-700 transition 
                  duration-200 ease-in-out
                  ml-1
-                 " to="/sign-up">Register</Link>
+                 " to="/sign-in">Sign in</Link>
               </p>
               <p>
                 <Link className="text-blue-600
