@@ -10,7 +10,7 @@ export default function Header() {
     }
   }
   return (
-    <div className=" bg-white fixed w-full z-40 top-0 start-0 border-b shadow-sm h-38"> 
+    <div className=" bg-white fixed w-full z-40 top-0 start-0 border-b shadow-sm "> 
         <header className='flex justify-between items-center px-3 max-w-6xl mx-auto'>
             <div>
                 <img src="https://static.rdc.moveaws.com/rdc-ui/logos/logo-brand.svg" 

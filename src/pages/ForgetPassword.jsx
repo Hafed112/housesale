@@ -1,16 +1,42 @@
-import { useState } from "react"
-import {Link} from "react-router-dom"
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import OAuth from "../components/OAuth";
+import { useNavigate } from "react-router-dom";
+
 export default function ForgetPassword() {
 
   const [email,setEmail]=useState("");
+
+  const navigate = useNavigate();
+
   function change(e){
     setEmail(e.target.value);
   }
 
+  const auth = getAuth();
+
+  async function onSubmitForgetPassword(e){
+    e.preventDefault();
+    try {
+      
+      await sendPasswordResetEmail(auth, email).then(()=>{
+        toast.success("Email was sent");
+        setTimeout(()=>{
+          navigate("/sign-in",{replace:true})
+        },5300)
+      });
+      
+    } catch (error) {
+      toast.error("Could not send reset password");
+      console.log(error);
+    }
+  }
+
   return (
     <section>
-      <h1 className="text-3xl text-center mt-12 font-bold">Sign In</h1>
+      <h1 className="text-3xl text-center mt-12 font-bold">Forget Password</h1>
       <div className="flex justify-center flex-wrap items-center 
            px-6 py-12 max-w-6xl mx-auto">
         <div className="md:w-[67%] lg:w-[50%] mb-12 md:mb-6">
@@ -19,7 +45,7 @@ export default function ForgetPassword() {
           className="w-full rounded-2xl" />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmitForgetPassword}>
             <div>
               <input type="email" id="email" 
                 value={email} 

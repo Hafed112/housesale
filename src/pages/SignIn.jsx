@@ -26,7 +26,7 @@ export default function SignIn() {
     try {
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(auth,email,password);
-      console.log(userCredential)
+      console.log(userCredential);
       if(userCredential.user){
         navigate("/");
       }
@@ -46,7 +46,7 @@ export default function SignIn() {
           className="w-full rounded-2xl" />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form onClick={onSubmit}>
+          <form onClick={()=>onSubmit}>
             <div>
               <input type="email" id="email" 
                 value={email} 
